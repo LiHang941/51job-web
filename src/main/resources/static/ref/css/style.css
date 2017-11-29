@@ -1,0 +1,38 @@
+
+body{
+    padding: 0;
+    margin: 0;
+    min-width: 1200px;
+}
+.header{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+}
+.body{
+    left: 0px;
+    width: 100%;
+    height: auto;
+    min-height: 100%;
+    padding-top: 20px;
+    z-index: 2;
+
+}
+
+.content{
+    display:none;
+    width: 1100px;
+    height: auto;
+    margin: 0 auto;
+    padding-bottom: 200px;
+}
+.progress{
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    width:800px;
+    margin-left:-400px;
+    margin-top:-50px;
+}

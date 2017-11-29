@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>小航博客-51job数据分析</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <link rel="stylesheet" type="text/css" href="ref/layui/css/layui.css">
+    <link href="ref/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="ref/css/style.css" rel="stylesheet">
+</head>
+<body class="layui-layout-body ">
+    <div class="layui-layout layui-layout-admin" >
+        <div class="layui-header header">
+            <div class="layui-logo ">
+                <h2 class="layui-anim layui-anim-rotate">51job数据分析</h2>
+            </div>
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layui-this" id="nav_main-1"><a href="javascript:change_main('main-1');">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe631;</i>
+                    数据抓取</a></li>
+                <li class="layui-nav-item" id="nav_main-2"><a href="javascript:create_chart();">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe629;</i>
+                    数据分析</a></li>
+                <li class="layui-nav-item" id="nav_main-3"><a href="javascript:create_table();">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe62d;</i>
+                    数据表格</a></li>
+                <li class="layui-nav-item" id="nav_main-4"><a href="javascript:create_code();">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe63c;</i>
+                    原始数据</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <i class="layui-icon" style="font-size: 20px; ">&#xe64c;</i>
+                        关于</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;">交流群</a></dd>
+                        <dd><a href="javascript:;">博客</a></dd>
+                        <dd><a href="javascript:;">GitHub</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-body body">
+            <div class="content" id="main-1">
+                <fieldset class="layui-elem-field layui-field-title" >
+                    <legend>筛选参数设定</legend>
+                    <div class="layui-field-box">
+                        <div id="from_progress" class="layui-progress layui-progress-big progress" lay-showpercent="true" lay-filter="my_progress" style="margin-top: 20px;margin-bottom: 20px;">
+                            <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
+                        </div>
+                        <form class="layui-form layui-form-pane" action="" id="form_vue">
+                            <div class="layui-form-item" pane>
+                                <label class="layui-form-label">搜索框</label>
+                                <div class="layui-input-block">
+                                    <input type="text" name="keyword" value="" placeholder="请输入关键字"  class="layui-input"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">城市选择</label>
+                                <div class="layui-input-inline">
+                                    <select lay-filter="area">
+                                        <option value="">请选择城市首字母</option>
+                                        <option v-for="idl in areaList" :value="idl.code" v-html="idl.value"></option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <select name="jobarea">
+                                        <option value="">请选择市</option>
+                                        <option v-for="idl in areaByCodeList" :value="idl.code" v-html="idl.value"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--工作范围-->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">发布日期</label>
+                                <div class="layui-input-inline">
+                                    <select name="issuedate">
+                                        <option value="">所有</option>
+                                        <option v-for="idl in issuedateList" :value="idl.code" v-html="idl.value"></option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">工作类型</label>
+                                <div class="layui-input-inline">
+                                    <select name="jobterm">
+                                        <option value="">所有</option>
+                                        <option v-for="idl in jobtermList" :value="idl.code" v-html="idl.value"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">学历要求</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="degree" lay-skin="primary" v-for="wk in degreeList" :title="wk.value" :value="wk.code"/>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">公司规模</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="cosize" lay-skin="primary" v-for="wk in cosizeList" :title="wk.value" :value="wk.code"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">工作年限</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="workyear" lay-skin="primary" v-for="wk in workyearList" :title="wk.value" :value="wk.code"/>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <fieldset class="layui-elem-field">
+                                    <legend>公司性质</legend>
+                                    <div class="layui-field-box">
+                                        <input type="checkbox" name="cotype" lay-skin="primary" v-for="wk in cotypeList" :title="wk.value" :value="wk.code"/>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="layui-form-item">
+                                <fieldset class="layui-elem-field">
+                                    <legend>薪资范围</legend>
+                                    <div class="layui-field-box">
+                                        <input type="checkbox" name="saltype" lay-skin="primary" v-for="wk in saltypeList" :title="wk.value" :value="wk.code"/>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <a class="layui-btn" href="javascript:;" v-on:click="form_send">开始抓取数据</a>
+                        </form>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="content" id="main-2">
+                <div class="layui-container">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md6">
+                            <fieldset class="layui-elem-field">
+                                <legend>各地区-职位情况</legend>
+                                <div class="layui-field-box">
+                                    <div id="chart_area" style="width: 100%;height: 600px;"></div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="layui-col-md6" >
+                            <fieldset class="layui-elem-field">
+                                <legend>各个公司-职位情况</legend>
+                                <div class="layui-field-box">
+                                    <div id="chart_company" style="width: 100%;height: 600px"></div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content" id="main-3">
+                <div class="layui-btn-group demoTable">
+                    <a class="layui-btn" href="javascript:;">删除选中的数目</a>
+                </div>
+                <table class="layui-hide" id="job_data_table" lay-filter="job_data_table"></table>
+                <script type="text/html" id="job_table_bar">
+                    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="show">查看</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                </script>
+            </div>
+            <div class="content" id="main-4">
+                <pre class="layui-code"  lay-title="JavaScript"  lay-skin="" lay-encode="true" lay-skin="notepad" id="job_code" style="width: 100%;">
+                </pre>
+            </div>
+        </div>
+        <div class="layui-footer layui-bg-black" style="z-index:100;left: 0px;text-align: center;" onclick="window.open('http://www.lihang.xyz')">
+            © 2017小航博客-51job职位数据分析
+        </div>
+    </div>
+</body>
+<script src="ref/jquery/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="ref/layui/layui.all.js"></script>
+<script src="ref/vue/vue.js"></script>
+<script src="ref/taffydb/taffy.js"></script>
+<script src="ref/echarts/echarts.min.js"></script>
+<script src="ref/js/core.js"></script>
+<script>
+
+
+</script>
+<script>
+    var JOB_DATA = TAFFY();
+    var select_main_id = "main-1";
+    change_main(select_main_id);
+
+
+    $(function () {
+        layui.element.render();
+        const form_vue = new Vue({
+            el: '#form_vue',
+            data:{
+                degreeList:JOB_CONSTANT.degree,
+                cosizeList:JOB_CONSTANT.cosize,
+                issuedateList:JOB_CONSTANT.issuedate,
+                saltypeList:JOB_CONSTANT.saltype,
+                workyearList:JOB_CONSTANT.workyear,
+                areaList:JOB_CONSTANT.area,
+                jobtermList:JOB_CONSTANT.jobterm,
+                cotypeList:JOB_CONSTANT.cotype,
+                areaByCodeList:[],
+            },
+            methods:{
+                form_send:function () {
+                    var $data = {};
+                    $data.keyword = "";
+                    $data.jobarea = "";
+                    $data.issuedate = "";
+                    $data.degree = "";
+                    $data.saltype = "";
+                    $data.cosize = "";
+                    $data.workyear = "";
+                    $data.cosize = "";
+                    $data.jobterm = "";
+                    var jsonList = $("#form_vue").serializeArray();
+                    $.each(jsonList,function (i,obj) {
+                        if( $data[obj.name]  == "" ){
+                            $data[obj.name] = obj.value;
+                        }else{
+                            $data[obj.name]  = $data[obj.name] + ","+obj.value;
+                        }
+                    });
+                    console.log("请求数据:" + $data);
+                    $.job_bast_post("totalcount",$data,function (reslut) {
+                        var msg = "总记录数:" + reslut.totalcount;
+                         msg =  msg + "<br/>总页数:" + reslut.pageSize;
+                         msg =  msg + "<br/>获取时间比较长,请等待...";
+                         msg =  msg + "<br/>点击确定继续";
+                        layer.confirm(msg, {icon: 3, title:'提示'}, function(index){
+                            layer.close(index);
+                            var _index = layer.load(1);
+                            //开始获取...
+                            var pageno = 1;
+                            JOB_DATA().remove();
+                            var job_post = function () {
+                                $data.pageno = pageno;
+                                $.job_bast_post("list",$data,function (listReslut) {
+
+                                    for(var i=0;i<listReslut.length;i++){
+                                        JOB_DATA.insert(listReslut[i]);
+                                    }
+                                    console.log("第" + pageno +"页获取完毕,共插入:" + listReslut.length + "条" );
+                                    change_progress(pageno,reslut.pageSize);
+                                    ++pageno;
+                                    if(pageno > reslut.pageSize){
+                                        console.log("数据库:" + JOB_DATA().count());
+                                        layer.close(_index);
+                                        layer.msg("抓取完毕,马上进入统计页面");
+                                        create_table();
+                                        return;
+                                    }else{
+                                        job_post();
+                                    }
+                                });
+                            };
+                            job_post();
+                        });
+                    })
+                },
+                areaByCodeListPush:function (list) {
+                    this.areaByCodeList = list;
+                    this.$nextTick(function(){
+                        layui.form.render();
+                    });
+                }
+            },
+            mounted: function () {
+                layui.form.render();
+            }
+        });
+        layui.form.on('select(area)', function(data){
+            if(data.value == ""){
+                form_vue.areaByCodeList = [];
+                return;
+            }
+            var url = "areaJson?code=" + data.value;
+            $.getJSON(url,function (result) {
+                form_vue.areaByCodeListPush(result.data.items) ;
+            });
+        });
+    });
+
+
+</script>
+</html>

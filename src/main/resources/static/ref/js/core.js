@@ -94,6 +94,12 @@ var create_chart_fn = {
                     trigger: 'item',
                     formatter: "{a} <br/>{b} : {c}个"
                 },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {},
+                        restore: {},
+                    }
+                },
                 legend: {
                     bottom: 10,
                     left: 'center',
@@ -154,14 +160,35 @@ var create_chart_fn = {
             var option = {
                 tooltip: {
                     trigger: 'axis',
-                    formatter: "{a} <br/> {b} {c}个职位"
+                    formatter: "{b} 共 {c} 个职位"
                 },
+                toolbox: {
+                    feature: {
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                dataZoom: [{
+                    type: 'inside',
+                    start: 0,
+                    end: 10
+                }, {
+                    start: 0,
+                    end: 10,
+                    handleSize: '80%',
+                    handleStyle: {
+                        color: '#fff',
+                        shadowBlur: 3,
+                        shadowColor: 'rgba(0, 0, 0, 0.6)',
+                        shadowOffsetX: 2,
+                        shadowOffsetY: 2
+                    }
+                }],
                 xAxis: {
                     name:"公司名",
                     data: $data,
                     axisLabel:{
-                        show:true,
-                        rotate:10
+                        show:false,
                     },
                 },
                 yAxis: {

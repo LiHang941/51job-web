@@ -28,16 +28,19 @@
                     <i class="layui-icon" style="font-size: 20px; ">&#xe62d;</i>
                     数据表格</a></li>
                 <li class="layui-nav-item" id="nav_main-4"><a href="javascript:create_code();">
-                    <i class="layui-icon" style="font-size: 20px; ">&#xe63c;</i>
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe635;</i>
                     原始数据</a></li>
+                <li class="layui-nav-item" id="nav_main-5"><a href="javascript:change_main('main-5');">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe60e;</i>
+                    更新动态</a></li>
                 <li class="layui-nav-item">
                     <a href="javascript:;">
                         <i class="layui-icon" style="font-size: 20px; ">&#xe64c;</i>
                         关于</a>
                     <dl class="layui-nav-child">
-                        <dd><a href="javascript:;">交流群</a></dd>
-                        <dd><a href="javascript:;">博客</a></dd>
-                        <dd><a href="javascript:;">GitHub</a></dd>
+                        <dd><a href="https://jq.qq.com/?_wv=1027&k=4EPZ3Xr" target="_blank">交流群</a></dd>
+                        <dd><a href="http://www.lihang.xyz" target="_blank">博客</a></dd>
+                        <dd><a href="https://github.com/wawa2222/" target="_blank">GitHub</a></dd>
                     </dl>
                 </li>
             </ul>
@@ -153,9 +156,15 @@
                 </div>
             </div>
             <div class="content" id="main-3">
-                <div class="layui-btn-group demoTable">
-                    <a class="layui-btn" href="javascript:;">删除选中的数目</a>
-                </div>
+                <!--<div class="layui-collapse">-->
+                    <!--<div class="layui-colla-item">-->
+                        <!--<h2 class="layui-colla-title">数据二次筛选</h2>-->
+                        <!--<div class="layui-colla-content">内容区域</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div class="layui-btn-group demoTable">-->
+                    <!--<a class="layui-btn" href="javascript:;">删除选中的数目</a>-->
+                <!--</div>-->
                 <table class="layui-hide" id="job_data_table" lay-filter="job_data_table"></table>
                 <script type="text/html" id="job_table_bar">
                     <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="show">查看</a>
@@ -165,6 +174,28 @@
             <div class="content" id="main-4">
                 <pre class="layui-code"  lay-title="JavaScript"  lay-skin="" lay-encode="true" lay-skin="notepad" id="job_code" style="width: 100%;">
                 </pre>
+            </div>
+            <div class="content" id="main-5">
+                <ul class="layui-timeline">
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">2017年11月30日</h3>
+                            <p>
+                                <br>
+                                <h2>51job简单的数据分析悄然上线</h2>
+                                <br>数据分析能力孱弱,望各位给点灵感以及建议<i class="layui-icon"></i><a href="http://www.lihang.xyz/message" target="_blank">留言</a>
+                                <br>
+                            </p>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="layui-timeline-title">过去</div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
         <div class="layui-footer layui-bg-black" style="z-index:100;left: 0px;text-align: center;" onclick="window.open('http://www.lihang.xyz')">
@@ -237,6 +268,13 @@
                             JOB_DATA().remove();
                             var job_post = function () {
                                 $data.pageno = pageno;
+                                if(pageno > reslut.pageSize){
+                                    console.log("数据库:" + JOB_DATA().count());
+                                    layer.close(_index);
+                                    layer.msg("抓取完毕,马上进入统计页面");
+                                    create_table();
+                                    return;
+                                }
                                 $.job_bast_post("list",$data,function (listReslut) {
 
                                     for(var i=0;i<listReslut.length;i++){
@@ -245,15 +283,12 @@
                                     console.log("第" + pageno +"页获取完毕,共插入:" + listReslut.length + "条" );
                                     change_progress(pageno,reslut.pageSize);
                                     ++pageno;
-                                    if(pageno > reslut.pageSize){
-                                        console.log("数据库:" + JOB_DATA().count());
-                                        layer.close(_index);
-                                        layer.msg("抓取完毕,马上进入统计页面");
-                                        create_table();
-                                        return;
-                                    }else{
-                                        job_post();
-                                    }
+                                    job_post();
+                                },function () {
+                                    console.log("第" + pageno +"页获取失败,共插入:" + 0 + "条" );
+                                    change_progress(pageno,reslut.pageSize);
+                                    ++pageno;
+                                    job_post();
                                 });
                             };
                             job_post();
@@ -281,6 +316,22 @@
                 form_vue.areaByCodeListPush(result.data.items) ;
             });
         });
+        layui.table.on('tool(job_data_table)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'show'){
+               console.log(obj);
+               var url = "http://jobs.51job.com/overseas/"+data.jobid+".html";
+               window.open(url);
+            }else if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    JOB_DATA({"jobid":{"is":data.jobid}}).remove();
+                    layer.close(index);
+                });
+            }
+        });
+
+
     });
 
 

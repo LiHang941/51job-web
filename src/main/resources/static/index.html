@@ -3,15 +3,15 @@
 <head>
     <title>小航博客-51job数据分析</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">
-    <meta content="yes" name="apple-mobile-web-app-capable">
-    <meta content="black" name="apple-mobile-web-app-status-bar-style">
-    <meta content="telephone=no" name="format-detection">
+    <!--<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">-->
+    <!--<meta content="yes" name="apple-mobile-web-app-capable">-->
+    <!--<meta content="black" name="apple-mobile-web-app-status-bar-style">-->
+    <!--<meta content="telephone=no" name="format-detection">-->
     <link rel="stylesheet" type="text/css" href="ref/layui/css/layui.css">
     <link href="ref/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="ref/css/style.css" rel="stylesheet">
 </head>
-<body class="layui-layout-body ">
+<body>
     <div class="layui-layout layui-layout-admin" >
         <div class="layui-header header">
             <div class="layui-logo ">
@@ -216,11 +216,9 @@
 <script>
     var JOB_DATA = TAFFY();
     var select_main_id = "main-1";
-    change_main(select_main_id);
-
-
     $(function () {
         layui.element.render();
+        change_main(select_main_id);
         const form_vue = new Vue({
             el: '#form_vue',
             data:{
@@ -330,10 +328,6 @@
                 });
             }
         });
-
-
     });
-
-
 </script>
 </html>

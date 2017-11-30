@@ -56,6 +56,7 @@ function change_main(id) {
  * 生成代码
  */
 function create_code() {
+    var _index =  layer.load(2);
     change_main("main-4");
     var $dom = $("#job_code");
     $dom.html("[");
@@ -70,6 +71,7 @@ function create_code() {
         index ++ ;
     });
     $dom.append("]");
+    layer.close(_index);
 }
 
 var create_chart_fn = {
@@ -209,9 +211,11 @@ var create_chart_fn = {
  * 创建统计图
  */
 function create_chart(){
+    var _index =  layer.load(2);
     change_main("main-2");
     create_chart_fn.fn.area();
     create_chart_fn.fn.company();
+    layer.close(_index);
 }
 
 /**
@@ -242,6 +246,7 @@ function table_delete_select() {
  * 创建表格
  */
 function create_table() {
+    var _index =  layer.load(2);
     change_main("main-3");
     var $data = [];
     JOB_DATA().order("lastupdate desc,coname desc").each(function (r) {
@@ -272,5 +277,6 @@ function create_table() {
         ,page: true
         ,even: true
     });
+    layer.close(_index);
 }
 

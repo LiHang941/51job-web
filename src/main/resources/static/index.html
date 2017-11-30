@@ -3,10 +3,9 @@
 <head>
     <title>小航博客-51job数据分析</title>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <!--<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport">-->
-    <!--<meta content="yes" name="apple-mobile-web-app-capable">-->
-    <!--<meta content="black" name="apple-mobile-web-app-status-bar-style">-->
-    <!--<meta content="telephone=no" name="format-detection">-->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="stylesheet" type="text/css" href="ref/layui/css/layui.css">
     <link href="ref/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="ref/css/style.css" rel="stylesheet">
@@ -181,12 +180,12 @@
                         <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
                         <div class="layui-timeline-content layui-text">
                             <h3 class="layui-timeline-title">2017年11月30日</h3>
-                            <p>
-                                <br>
-                                <h2>51job简单的数据分析悄然上线</h2>
-                                <br>数据分析能力孱弱,望各位给点灵感以及建议<i class="layui-icon"></i><a href="http://www.lihang.xyz/message" target="_blank">留言</a>
-                                <br>
-                            </p>
+                                <p><h5>51job简单的数据分析悄然上线</h5></p>
+                                <ul>
+                                    <li>数据分析能力孱弱</li>
+                                    <li>望各位给点灵感以及建议<i class="layui-icon"></i></li>
+                                    <li><a href="http://www.lihang.xyz/message" target="_blank">到此处留言</a></li>
+                                </ul>
                         </div>
                     </li>
                     <li class="layui-timeline-item">
@@ -209,6 +208,7 @@
 <script src="ref/taffydb/taffy.js"></script>
 <script src="ref/echarts/echarts.min.js"></script>
 <script src="ref/js/core.js"></script>
+<script src="ref/js/ispc.js"></script>
 <script>
 
 
@@ -219,6 +219,7 @@
     $(function () {
         layui.element.render();
         change_main(select_main_id);
+        isPc();
         const form_vue = new Vue({
             el: '#form_vue',
             data:{

@@ -5,6 +5,7 @@ body{
     overflow-y: hidden;
     overflow-x: scroll;
     min-width: 1200px;
+    height: auto;
 }
 .header{
     position: fixed;
@@ -14,12 +15,12 @@ body{
 }
 .body{
     left: 0px;
-    width: 100%;
     height: auto;
     min-height: 100%;
     padding-top: 20px;
     z-index: 2;
-
+    min-width: 1200px;
+    width: 100%;
 }
 
 .content{

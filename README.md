@@ -1,5 +1,5 @@
-# 51job-web查询工具
-1. 采用SpringBoot+Layer+Echarts+taffy(前端数据库)进行简单的数据查询并统计,直观的查看各个公司、地区的职位情况,方便找工作的各位能在该工具的帮助的情况
+# 51job数据web端查询工具
+1. 采用SpringBoot+Layer+Echarts+taffy(前端数据库)技术,对数据进行简单的查询并统计,直观的查看各个公司、地区的职位情况,方便找工作的各位能在该工具的帮助的情况
 快速定位日后住房,不必投放的简历
 2. [示例地址](http://51job.lihang.xyz)
 3. [51job数据入库自定义查询](https://github.com/wawa2222/51job)

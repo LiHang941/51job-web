@@ -1,23 +1,8 @@
-
-var JOB_CONSTANT = {};
-JOB_CONSTANT.degree = [{"code":"01","value":"初中及以下"},{"code":"02","value":"高中/中技/中专"},{"code":"03","value":"大专"},{"code":"04","value":"本科"},{"code":"05","value":"硕士"},{"code":"06","value":"博士"}];
-JOB_CONSTANT.cosize = [{"code":"01","value":"少于50人"},{"code":"02","value":"50-150人"},{"code":"03","value":"150-500人"},{"code":"04","value":"500-1000人"},{"code":"05","value":"1000-5000人"},{"code":"06","value":"5000-10000人"},{"code":"07","value":"10000人以上"}];
-JOB_CONSTANT.issuedate = [{"code":"0","value":"24小时内"},{"code":"1","value":"近三天"},{"code":"2","value":"近一周"},{"code":"3","value":"近一月"}];
-JOB_CONSTANT.saltype = [{"code":"01","value":"2千以下"},{"code":"02","value":"2-3千"},{"code":"03","value":"3-4.5千"},{"code":"04","value":"4.5-6千"},{"code":"05","value":"6-8千"},{"code":"06","value":"0.8-1万"},{"code":"07","value":"1-1.5万"},{"code":"08","value":"1.5-2万"},{"code":"09","value":"2-3万"},{"code":"10","value":"3-4万"},{"code":"11","value":"4-5万"},{"code":"12","value":"5万以上"}];
-JOB_CONSTANT.workyear = [{"code":"01","value":"无经验"},{"code":"02","value":"1-3年"},{"code":"03","value":"3-5年"},{"code":"04","value":"5-10年"},{"code":"05","value":"10年以上"}];
-JOB_CONSTANT.area = [{"code":"000000","value":"热门城市"},{"code":"000001","value":"A B C"},{"code":"000002","value":"D E F G"},{"code":"000003","value":"H I"},{"code":"000004","value":"J K"},{"code":"000005","value":"L M N"},{"code":"000006","value":"O P Q R"},{"code":"000007","value":"S T U"},{"code":"000008","value":"V W X"},{"code":"000009","value":"Y Z"},{"code":"000010","value":"所有省份(含港澳台)"},{"code":"000011","value":"国外"},{"code":"000012","value":"全国"}];
-JOB_CONSTANT.jobterm = [{"code":"01","value":"全职"},{"code":"02","value":"兼职"}];
-JOB_CONSTANT.cotype = [{"code":"01","value":"\n                 外资（欧美） \n            "},{"code":"02","value":"\n                 外资（非欧美） \n            "},{"code":"03","value":"\n                 合资 \n            "},{"code":"04","value":"\n                 国企 \n            "},{"code":"05","value":"\n                 民营公司 \n            "},{"code":"06","value":"\n                 外企代表处 \n            "},{"code":"07","value":"\n                 政府机关 \n            "},{"code":"08","value":"\n                 事业单位 \n            "},{"code":"09","value":"\n                 非营利机构 \n            "},{"code":"10","value":"\n                 上市公司 \n            "},{"code":"11","value":"\n                 创业公司 \n            "}];
-(function($,layer) {
-    if($==null || $===undefined ){
-        console.log("Jquery不存在");
-        return ;
-    }
-    if(layer==null || layer===undefined ){
-        console.log("Layer不存在");
-        return ;
-    }
-   $.job_bast_post = function ($url,$data,$successFn,$errorFn) {
+/**
+ * ajax 二次封装
+ */
+(function($) {
+    $.job_bast_post = function ($url,$data,$successFn,$errorFn) {
            $.ajax(
                {
                    url:$url,
@@ -27,7 +12,6 @@ JOB_CONSTANT.cotype = [{"code":"01","value":"\n                 外资（欧美�
                    success: function(result){
                        if($successFn!=null)
                            $successFn(result);
-
                    },
                    error:function () {
                        if($errorFn!=null)
@@ -36,187 +20,462 @@ JOB_CONSTANT.cotype = [{"code":"01","value":"\n                 外资（欧美�
                }
            );
    }
-})(jQuery,layer);
-
-
+})(jQuery);
 /**
  * 修改选择的select
  * @param id
  */
-function change_main(id) {
-    $("#nav_" + select_main_id ).removeClass("layui-this");
-    $("#" + select_main_id).hide("slow");
-    $("#nav_" + id ).addClass("layui-this");
-    $("#" + id).show("slow");
-    select_main_id = id;
-    layui.element.render();
-}
+(function (window) {
+    var select_main_id = "main-1";
+    window.change_main = function (id,callFn) {
+        var _index =  layer.load(2);
+        $("#nav_" + select_main_id ).removeClass("layui-this");
+        $("#" + select_main_id).hide("slow");
+        $("#nav_" + id ).addClass("layui-this");
+        $("#" + id).show("slow");
+        select_main_id = id;
+        layui.element.render();
+        setTimeout(function () {
+            if(callFn!=null){
+                callFn();
+            }
+            layer.close(_index);
+        },0);
+    }
+    change_main(select_main_id);
+})(window);
+
 
 /**
  * 生成代码
  */
-function create_code() {
-    var _index =  layer.load(2);
-    change_main("main-4");
-    var $dom = $("#job_code");
-    $dom.html("[");
-    var $data = JOB_DATA().order("lastupdate desc,coname desc");
-    var count =$data.count();
-    var index = 0;
-    $data.each(function (r) {
-        $dom.append( JSON.stringify(r, null, 4));
-        if(index < count){
-            $dom.append(",");
-        }
-        index ++ ;
-    });
-    $dom.append("]");
-    layer.close(_index);
-}
-
-var create_chart_fn = {
-    interval_code : {
-        chart_area:null
-    },
-    fn:{
-        //区域统计
-        area : function(){
-            var myChart = echarts.init(document.getElementById('chart_area'));
-            // 指定图表的配置项和数据
-            var $data = JOB_DATA().distinct("jobarea");
-            var $dataAll = [];
-            $.each($data , function(i, n){
-                var _temp = {};
-                _temp.value = JOB_DATA({"jobarea":{"is":n}}).count();
-                _temp.name = n;
-                $dataAll.push(_temp);
-            });
-            var option  = {
-                tooltip : {
-                    trigger: 'item',
-                    formatter: "{a} <br/>{b} : {c}个"
-                },
-                toolbox: {
-                    feature: {
-                        saveAsImage: {},
-                        restore: {},
-                    }
-                },
-                legend: {
-                    bottom: 10,
-                    left: 'center',
-                    data: $data
-                },
-                series : [
-                    {
-                        name: '职位个数',
-                        type: 'pie',
-                        radius : '50%',
-                        center: ['50%', '45%'],
-                        data:$dataAll
-                    }
-                ]
-            };
-            // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(option);
-            var currentIndex = -1;
-            if(create_chart_fn.interval_code.chart_area!=null){
-                clearInterval(create_chart_fn.interval_code.chart_area);
-                currentIndex = -1;
-            }
-            create_chart_fn.interval_code.chart_area = setInterval(function () {
-                var dataLen = option.series[0].data.length;
-                // 取消之前高亮的图形
-                myChart.dispatchAction({
-                    type: 'downplay',
-                    seriesIndex: 0,
-                    dataIndex: currentIndex
-                });
-                currentIndex = (currentIndex + 1) % dataLen;
-                // 高亮当前图形
-                myChart.dispatchAction({
-                    type: 'highlight',
-                    seriesIndex: 0,
-                    dataIndex: currentIndex
-                });
-                // 显示 tooltip
-                myChart.dispatchAction({
-                    type: 'showTip',
-                    seriesIndex: 0,
-                    dataIndex: currentIndex
-                });
-            }, 1000);
-        },
-        //公司职位发布统计
-        company:function () {
-            var myChart = echarts.init(document.getElementById('chart_company'));
-            // 指定图表的配置项和数据
-            var $data = JOB_DATA().distinct("coname");
-            var $dataAll = [];
-            $.each($data , function(i, n){
-                var _temp = {};
-                _temp.value = JOB_DATA({"coname":{"is":n}}).count();
-                _temp.name = n;
-                $dataAll.push(_temp);
-            });
-            var option = {
-                tooltip: {
-                    trigger: 'axis',
-                    formatter: "{b} 共 {c} 个职位"
-                },
-                toolbox: {
-                    feature: {
-                        restore: {},
-                        saveAsImage: {}
-                    }
-                },
-                dataZoom: [{
-                    type: 'inside',
-                    start: 0,
-                    end: 10
-                }, {
-                    start: 0,
-                    end: 10,
-                    handleSize: '80%',
-                    handleStyle: {
-                        color: '#fff',
-                        shadowBlur: 3,
-                        shadowColor: 'rgba(0, 0, 0, 0.6)',
-                        shadowOffsetX: 2,
-                        shadowOffsetY: 2
-                    }
-                }],
-                xAxis: {
-                    name:"公司名",
-                    data: $data,
-                    axisLabel:{
-                        show:false,
-                    },
-                },
-                yAxis: {
-                    name:"职位发布个数"
-                },
-                series: {
-                    name: '公司名称',
-                    type: 'line',
-                    data: $dataAll,
-                }
-            };
-            myChart.setOption(option);
-        },
-        //
+(function (window,layui,layer) {
+    var page = 1;
+    const pageSize = 10;
+    var create_node = function (list) {
+       var node =  $("<pre></pre>").attr("class","layui-code")
+            .attr("lay-encode","layui-code")
+            .attr("lay-title","JavaScript")
+            .attr("about","true")
+            .attr("style","width: 100%;");
+       node.html(JSON.stringify(list, null, 4));
+       return node;
     }
-};
+
+    window.code_next_page = function () {
+        var offSet = (page-1) * pageSize + 1;
+        var $data = FIlTER_JOB_DATA().order("lastupdate desc,coname desc");
+        var count = $data.count();
+        if((offSet >= count && count != 0) ||(page > 1 && count == 0) ){
+            $("#main-4 p button").hide();
+            layer.msg('没有更多的数据可供显示!!!', {icon: 2});
+            return ;
+        }
+        $data = FIlTER_JOB_DATA().order("lastupdate desc,coname desc").start(offSet).limit(pageSize);
+        var list = [];
+        $data.each(function (r) {
+            list.push(r);
+        });
+        page = page + 1;
+        var node = create_node(list);
+        var id = "code_" + new Date().getTime();
+        node.attr("id",id);
+        $("#main-4 p").before(node);
+        layui.code({elem: "#" + id});
+    }
+    
+    window.code_clear = function () {
+       $("#main-4 pre").remove();
+       $("#main-4 p button").show();
+       page = 1;
+       code_next_page();
+    }
+    window.create_code = function () {
+        change_main("main-4",function () {
+            code_clear();
+        });
+    }
+})(window,layui,layer);
+
+
+
+
 /**
  * 创建统计图
  */
-function create_chart(){
-    var _index =  layer.load(2);
-    change_main("main-2");
-    create_chart_fn.fn.area();
-    create_chart_fn.fn.company();
-    layer.close(_index);
-}
+(function (window) {
+    var create_chart_fn = {
+        interval_code : {
+            chart_area:null,
+            chart_workyear:null
+        },
+        fn:{
+            //区域统计
+            area : function(){
+                var myChart = echarts.init(document.getElementById('chart_area'));
+                // 指定图表的配置项和数据
+                var $data = FIlTER_JOB_DATA().distinct("jobarea");
+                var $dataAll = [];
+                $.each($data , function(i, n){
+                    var _temp = {};
+                    _temp.value = FIlTER_JOB_DATA().filter({"jobarea":{"is":n}}).count();
+                    _temp.name = n;
+                    $dataAll.push(_temp);
+                });
+                var option  = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c}个"
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {},
+                            restore: {},
+                        }
+                    },
+                    legend: {
+                        bottom: 10,
+                        left: 'center',
+                        data: $data
+                    },
+                    series : [
+                        {
+                            name: '职位个数',
+                            type: 'pie',
+                            radius : '50%',
+                            center: ['50%', '45%'],
+                            data:$dataAll
+                        }
+                    ]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+                var currentIndex = -1;
+                if(create_chart_fn.interval_code.chart_area!=null){
+                    clearInterval(create_chart_fn.interval_code.chart_area);
+                    currentIndex = -1;
+                }
+                create_chart_fn.interval_code.chart_area = setInterval(function () {
+                    var dataLen = option.series[0].data.length;
+                    // 取消之前高亮的图形
+                    myChart.dispatchAction({
+                        type: 'downplay',
+                        seriesIndex: 0,
+                        dataIndex: currentIndex
+                    });
+                    currentIndex = (currentIndex + 1) % dataLen;
+                    // 高亮当前图形
+                    myChart.dispatchAction({
+                        type: 'highlight',
+                        seriesIndex: 0,
+                        dataIndex: currentIndex
+                    });
+                    // 显示 tooltip
+                    myChart.dispatchAction({
+                        type: 'showTip',
+                        seriesIndex: 0,
+                        dataIndex: currentIndex
+                    });
+
+                }, 1000);
+                return myChart;
+            },
+            //公司职位发布统计
+            company:function () {
+                var myChart = echarts.init(document.getElementById('chart_company'));
+                // 指定图表的配置项和数据
+                var $coid = [];
+                var $x = [];
+                var $y = [];
+                $.each(FIlTER_JOB_DATA().distinct("coid") , function(i, n){
+                    var _temp = FIlTER_JOB_DATA().filter({"coid":{"is":n}});
+                    $coid.push(n);
+                    $x.push(_temp.first().coname);
+                    $y.push(_temp.count());
+                });
+                var option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        enterable:true,
+                        triggerOn:"click",
+                        position: [0, 0],
+                        formatter: function (params, ticket, callback) {
+                            setTimeout(function () {
+                                var coname = $x[params[0].dataIndex];
+                                var ccount = $y[params[0].dataIndex];
+                                var coid = $coid[params[0].dataIndex];
+                                var str =  coname + "<br/>共发布了 <b style='color: #007DDB'>" +ccount + "</b>个职位<br/>";
+                                str = str + "<a class='layui-btn layui-btn-primary layui-btn-xs' href='http://jobs.51job.com/all/co"+coid+".html' target='_blank'>查看公司</a>";
+                                str = str + "<a class='layui-btn layui-btn-danger layui-btn-xs' href='javascript:;' onclick='$(this).parent().hide();'>关闭</a><hr/>";
+                                var i = 1;
+                                FIlTER_JOB_DATA().filter({"coid":{"is":coid}}).each(function (obj) {
+                                    str = str + i + ":" + obj.jobname +"<br/>"
+                                    i++;
+                                });
+                                if(i>=20){
+                                    str = str + "<div style='margin-top: 100px;'></div>";
+                                }
+                                callback(ticket, str);
+                            },0);
+                            return "loading...";
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            magicType: {type: ['line', 'bar']},
+                            saveAsImage: {}
+                        }
+                    },
+                    dataZoom: [{
+                        type: 'inside',
+                        start: 0,
+                        end: 1000/$x.length
+                    }, {
+                        start: 0,
+                        end: 1000/$x.length,
+                        handleSize: '80%',
+                        handleStyle: {
+                            color: '#fff',
+                            shadowBlur: 3,
+                            shadowColor: 'rgba(0, 0, 0, 0.6)',
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        }
+                    }],
+                    xAxis: {
+                        name:"公司名",
+                        data: $x,
+                        axisLabel:{
+                            show:false,
+                        },
+                    },
+                    yAxis: {
+                        name:"职位发布个数"
+                    },
+                    series: {
+                        name: '公司名称',
+                        type: 'line',
+                        data: $y,
+                        markPoint: {
+                            data: [
+                                {type: 'max', name: '最大值'}
+                            ]
+                        },
+                    }
+                };
+                myChart.setOption(option);
+                return myChart;
+            },
+            //薪资情况chart_sal
+            sal : function () {
+                var myChart = echarts.init(document.getElementById('chart_sal'));
+                // 指定图表的配置项和数据
+                var $data = [];
+                var $x = [];
+                var $salMax = [];
+                var $salMin = [];
+                $.each(FIlTER_JOB_DATA().distinct("jobid") , function(i, n){
+                    var $job = FIlTER_JOB_DATA().filter({"jobid":{"is":n}}).first();
+                    if(isFinite($job.startSalary) && isFinite($job.endSalary)){
+                        $data.push($job);
+                        $x.push($job.jobname);
+                        $salMin.push($job.startSalary);
+                        $salMax.push($job.endSalary);
+                    }
+                });
+
+                var option = {
+                    tooltip: {
+                        trigger: 'axis',
+                        enterable:true,
+                        triggerOn:"click",
+                        position: [0, 0],
+                        formatter: function (params, ticket, callback) {
+                            var $job = $data[params[0].dataIndex];
+                            $.job_bast_post("get",{jobid:$job.jobid},function (result) {
+                                var job = jobinfo_Parse(result.key);
+                                var str = "";
+                                for(var key in JOB_CONSTANT.convert){
+                                    if(job[key] !== undefined){
+                                        str = str + "<span style='color: #01AAED;font-weight:bold;'>"
+                                            +JOB_CONSTANT.convert[key] +":</span>"
+                                            +"&nbsp;&nbsp;&nbsp;"+ job[key].replace(/\n/g,"<br/>") ;
+                                    }
+                                    str = str + " <br/>";
+                                }
+                                str = str + " <br/>";
+                                str = str + "<a class='layui-btn layui-btn-warm layui-btn-xs' href='http://jobs.51job.com/overseas/"+$job.jobid+".html' target='_blank'>查看职位</a>";
+                                str = str + "<a class='layui-btn layui-btn-primary layui-btn-xs' href='http://jobs.51job.com/all/co"+$job.coid+".html' target='_blank'>查看公司</a>";
+                                str = str + "<a class='layui-btn layui-btn-danger layui-btn-xs' href='javascript:;' onclick='$(this).parent().hide();'>关闭</a>";
+                                //todo 关不掉
+                                callback(ticket, str);
+                            });
+                            return "loading...";
+                        },
+
+                    },
+                    legend: {
+                        data:['最高薪资','最低薪资']
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            magicType: {type: ['line', 'bar']},
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis:  {
+                        type: 'category',
+                        boundaryGap: false,
+                        axisLabel:{
+                            show:false,
+                        },
+                        data: $x
+                    },
+                    yAxis: {
+                        type: 'value',
+                    },
+                    series: [
+                        {
+                            name:'最高薪资',
+                            type:'line',
+                            data:$salMax,
+                            markPoint: {
+                                data: [
+                                    {type: 'max', name: '最大值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        },
+                        {
+                            name:'最低薪资',
+                            type:'line',
+                            data:$salMin,
+                            markPoint: {
+                                data: [
+                                    {type: 'min', name: '最大值'}
+                                ]
+                            },
+                            markLine: {
+                                data: [
+                                    {type: 'average', name: '平均值'}
+                                ]
+                            }
+                        }
+                    ],
+                    dataZoom: [{
+                        type: 'inside',
+                        start: 0,
+                        end: 1000/$x.length
+                    }, {
+                        start: 0,
+                        end: 1000/$x.length,
+                        handleSize: '80%',
+                        handleStyle: {
+                            color: '#fff',
+                            shadowBlur: 3,
+                            shadowColor: 'rgba(0, 0, 0, 0.6)',
+                            shadowOffsetX: 2,
+                            shadowOffsetY: 2
+                        }
+                    }],
+                };
+                myChart.setOption(option);
+                return myChart;
+            },
+            //经验要求chart_workyear
+            workyear:function () {
+                var myChart = echarts.init(document.getElementById('chart_workyear'));
+                // 指定图表的配置项和数据
+                var $data = FIlTER_JOB_DATA().distinct("workyear");
+                var $dataAll = [];
+                $.each($data , function(i, n){
+                    var _temp = {};
+                    _temp.value = FIlTER_JOB_DATA().filter({"workyear":{"is":n}}).count();
+                    _temp.name = n;
+                    $dataAll.push(_temp);
+                });
+                var option  = {
+                    tooltip : {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c}个"
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {},
+                            restore: {},
+                        }
+                    },
+                    legend: {
+                        bottom: 10,
+                        left: 'center',
+                        data: $data
+                    },
+                    series : [
+                        {
+                            name: '工作经验用人分布',
+                            type: 'pie',
+                            radius : '50%',
+                            center: ['50%', '45%'],
+                            data:$dataAll
+                        }
+                    ]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+                var currentIndex = -1;
+                if(create_chart_fn.interval_code.chart_area!=null){
+                    clearInterval(create_chart_fn.interval_code.chart_workyear);
+                    currentIndex = -1;
+                }
+                create_chart_fn.interval_code.chart_workyear = setInterval(function () {
+                    var dataLen = option.series[0].data.length;
+                    // 取消之前高亮的图形
+                    myChart.dispatchAction({
+                        type: 'downplay',
+                        seriesIndex: 0,
+                        dataIndex: currentIndex
+                    });
+                    currentIndex = (currentIndex + 1) % dataLen;
+                    // 高亮当前图形
+                    myChart.dispatchAction({
+                        type: 'highlight',
+                        seriesIndex: 0,
+                        dataIndex: currentIndex
+                    });
+                    // 显示 tooltip
+                    myChart.dispatchAction({
+                        type: 'showTip',
+                        seriesIndex: 0,
+                        dataIndex: currentIndex
+                    });
+                }, 1000);
+                return myChart;
+            }
+        }
+    };
+    window.charts_fn = function (name,call) {
+        var mychart = charts_ids[name];
+        if(mychart!=null){
+            call(mychart);
+        }
+    };
+    window.charts_ids = {area:null,company:null,workyear:null,sal:null};
+    window.create_chart = function(){
+        change_main("main-2",function () {
+            charts_ids ['area'] = create_chart_fn.fn.area();
+            charts_ids ['company'] = create_chart_fn.fn.company();
+            charts_ids ['workyear'] = create_chart_fn.fn.workyear();
+            charts_ids ['sal'] = create_chart_fn.fn.sal();
+        });
+    }
+})(window)
+
+
 
 /**
  * 修改进度条
@@ -234,22 +493,20 @@ function change_progress(pageno,pageSize) {
 }
 
 /**
- *
+ * 切换到表格界面并创建表格
  */
-function table_delete_select() {
-    var checkStatus = layui.table.checkStatus('job_data_table')
-    var data = checkStatus.data;
-    layer.alert(JSON.stringify(data));
+function create_table() {
+    change_main("main-3",function () {
+        create_table_data();
+    });
 }
 
 /**
- * 创建表格
+ * 创建表格数据
  */
-function create_table() {
-    var _index =  layer.load(2);
-    change_main("main-3");
+function create_table_data() {
     var $data = [];
-    JOB_DATA().order("lastupdate desc,coname desc").each(function (r) {
+    FIlTER_JOB_DATA().order("lastupdate desc,coname desc").each(function (r) {
         $data.push(r);
     });
     layui.table.render({
@@ -262,12 +519,13 @@ function create_table() {
             ,{field:'jobname', width:250, title: '工作名称'}
             ,{field:'degree', width:80, title: '学历'}
             ,{field:'workyear', width:100, title: '工作经验'}
-            ,{field:'providesalary',width:100,  title: '工资'}
+            ,{field:'providesalary',width:120,  title: '工资'}
             ,{field:'jobarea',width:160, title: '地区'}
             ,{field:'cddr', width:200, title: '工作地点'}
             ,{field:'coname',width:250, title: '公司名称'}
             ,{field:'cotype', width:120,title: '公司类型'}
             ,{field:'lastupdate',width:160,  title: '发布时间'}
+            ,{field:'issuedate',width:160,  title: '最后更新'}
             ,{fixed: 'right', title:'操作',align:'center',width:160, toolbar: '#job_table_bar'}
         ]]
         ,data:$data
@@ -277,6 +535,148 @@ function create_table() {
         ,page: true
         ,even: true
     });
-    layer.close(_index);
 }
 
+/**
+ * 生成二次筛选条件
+ */
+function create_condition(db) {
+    var $list = $("#job-table-form select");
+    var _create_select = function ($select,list) {
+        $select = $($select);
+        $select.find("option:gt(0)").remove();
+        list.sort();
+        for(var i=0;i<list.length;i++){
+            $select.append("<option value='"+list[i]+"'>"+list[i]+"</option>");
+        }
+    };
+    _create_select($list[0],db().distinct("providesalary"));
+    _create_select($list[1],db().distinct("workyear"));
+    _create_select($list[2],db().distinct("degree"));
+    layui.form.render();
+}
+
+(function (window) {
+    var condition = null;
+
+    window.FIlTER_JOB_DATA = function () {
+        if(condition == null){
+            return JOB_DATA();
+        }else{
+            var jd = JOB_DATA();
+            for(var i=0;i<condition.length;i++){
+                jd = jd.filter(condition[i]);
+            }
+            return jd;
+        }
+    };
+    
+    window.clear_Condition = function() {
+        condition = null;
+    };
+
+
+    window.get_Condition = function() {
+        var conditionJsonList = $("#job-table-form").serializeArray();
+        var conArr = [];
+        var clearFlag = true;
+        $.each(conditionJsonList,function (i,obj) {
+            obj.value = $.trim(obj.value);
+            if(obj.value != ""){
+                var tempArr = obj.name.split("_");
+                if(tempArr[1] == "startSalary" || tempArr[1] == "endSalary"){
+                    obj.value =  parseFloat(obj.value);
+                }
+                var tempCon = {};
+                var where = {};
+                where[tempArr[0]] = obj.value;
+                tempCon[tempArr[1]] = where ;
+                conArr.push(tempCon);
+                clearFlag = false;
+            }
+        });
+        if(conArr.length>0){
+            condition = conArr;
+        }
+        console.log("二次筛选:::" + JSON.stringify(condition));
+        if(clearFlag){
+            clear_Condition();
+        }
+    }
+
+})(window)
+
+function jobinfo_Parse(job) {
+    var parseMoney = function (yearStr) {
+        return yearStr === "千" ? 1000 : yearStr === "万" ? 10000 : 1;
+    }
+    var parseDate = function (dateStr) {
+        return (dateStr === "天" ? 30 : dateStr === "年" ? (1/12) : 1 );
+    }
+    //解析salary
+    var parseSalary = function (providesalary) {
+        var providesalaryStr = providesalary.providesalary;
+        var defaultResult = [0,0];
+        if(providesalaryStr!=null && providesalaryStr != ""){
+            try{
+                if(/(\d+.*)-(.*\d+)(.)\/(.)/.test(providesalaryStr)){  //["1.2-2万/月", "1.2-2", "万/月"]
+                    var salaryParseArr = providesalaryStr.match(/(\d+.*)-(.*\d+)(.)\/(.)/);
+                    var qita = parseMoney(salaryParseArr[3]) * parseDate(salaryParseArr[4]);
+                    //计算月薪公式  sal * （千、万/数量级） * （年1/12、月1、日30）
+                    defaultResult[0] = salaryParseArr[1] * qita ;
+                    defaultResult[1] = salaryParseArr[2] * qita;
+                }else if(/(.*\d)(.)以(.)\/(.)/.test(providesalaryStr)){ //  "1.5千以下/月", "10万以上/月"
+                    var salaryParseArr = providesalaryStr.match(/(.*\d)(.)以(.)\/(.)/);//["1.5千以下/月", "1.5", "千", "下", "月"]
+                    var qita = salaryParseArr[1] * parseMoney(salaryParseArr[2]) * parseDate(salaryParseArr[4]);
+                    if(salaryParseArr[3] == "下"){
+                        defaultResult[0] = 0 ;
+                        defaultResult[1] =  qita;
+                    }else{
+                        defaultResult[0] =  qita;
+                        defaultResult[1] =  Number.POSITIVE_INFINITY;
+                    }
+                }else if(/(.*\d)元\/(.)/.test(providesalaryStr)){ //150元/天
+                    var salaryParseArr = providesalaryStr.match(/(.*\d)元\/(.)/);//["150元/天", "150"]
+                    var qita = salaryParseArr[1]  * parseDate(salaryParseArr[2]);
+                    defaultResult[0] = qita ;
+                    defaultResult[1] =  qita;
+                }else{
+                    console.log("error providesalary :::" + providesalary.providesalary);
+                    console.log("error providesalary :::" + JSON.stringify(providesalary));
+                }
+            }catch (e){
+                console.log("error providesalary :::" + providesalary.providesalary);
+                console.log("error providesalary :::" + JSON.stringify(providesalary));
+                defaultResult = [0,0];
+            }
+        }
+        defaultResult[0] = parseFloat(defaultResult[0]).toFixed(2);
+        defaultResult[1] = parseFloat(defaultResult[1]).toFixed(2);
+        return defaultResult;
+    }
+    if(job.workyear == ""){
+        job.workyear = "无工作经验";
+    }
+    if(job.degree == ""){
+        job.degree = "不限";
+    }
+    var salaryArr = parseSalary(job);
+    //计算出月薪
+    job.startSalary = salaryArr[0];
+    job.endSalary = salaryArr[1];
+    job.avgSalary = parseFloat((salaryArr[1] + salaryArr[0])/2).toFixed(2);
+    return job;
+}
+
+function job_insert(list,db) {
+    //解析数据
+    for(var i=0;i<list.length;i++){
+        db.insert(jobinfo_Parse(list[i]));
+    }
+}
+
+function log_banner() {
+    $.job_bast_post("banner",null,function (res) {
+        console.log(res.key);
+    })
+}

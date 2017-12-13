@@ -8,11 +8,8 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.io.*;
 import java.util.Date;
 
-
 /**
  * 封装了XML转换成object，object转换成XML的代码
- *
- * @author Steven
  */
 public class XMLUtil {
 
@@ -85,7 +82,7 @@ public class XMLUtil {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-        return  (T)xmlObject;
+        return (T) xmlObject;
     }
 
     /**
@@ -106,13 +103,13 @@ public class XMLUtil {
         } catch (JAXBException e) {
             e.printStackTrace();
         }
-        return (T)xmlObject;
+        return (T) xmlObject;
     }
 
-    public static class PhpDateAdapter extends XmlAdapter<Long,Date>{
-        protected PhpDateAdapter() {
-            super();
-        }
+    /**
+     * 解决Php时间戳比java少000的问题
+     */
+    public static class PhpDateAdapter extends XmlAdapter<Long, Date> {
         @Override
         public Date unmarshal(Long v) throws Exception {
             return new Date(v * 1000);

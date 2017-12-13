@@ -14,7 +14,7 @@ import java.util.Date;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "item")
 @XmlType
-public class JobInfo implements Serializable{
+public class JobInfo implements Serializable {
 
     private Long coid;
     private String cddr;
@@ -33,7 +33,7 @@ public class JobInfo implements Serializable{
     private String workyear;
     private String providesalary;
 
-    @XmlJavaTypeAdapter(value=XMLUtil.PhpDateAdapter.class)
+    @XmlJavaTypeAdapter(value = XMLUtil.PhpDateAdapter.class)
     private Date lastupdate;
     private Date issuedate;
 

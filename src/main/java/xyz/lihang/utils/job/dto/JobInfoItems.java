@@ -10,12 +10,14 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "resultbody")
 @XmlType
-public class Resultbody implements Serializable{
+public class JobInfoItems implements Serializable {
 
     private Integer uselandmarkstatus;
 
     private String currentcitycode;
+
     private String currentcityvalue;
+
     private Integer totalcount;
 
     private List<JobInfo> item;
@@ -60,14 +62,4 @@ public class Resultbody implements Serializable{
         this.item = item;
     }
 
-    @Override
-    public String toString() {
-        return "Resultbody{" +
-                "uselandmarkstatus=" + uselandmarkstatus +
-                ", currentcitycode='" + currentcitycode + '\'' +
-                ", currentcityvalue='" + currentcityvalue + '\'' +
-                ", totalcount=" + totalcount +
-                ", item=" + item +
-                '}';
-    }
 }

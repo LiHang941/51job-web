@@ -1,19 +1,21 @@
 package xyz.lihang.utils.job.dto;
 
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "responsemessage")
 @XmlType
-public class BaseDto implements Serializable{
+public class JobBaseDetailedInfo {
 
-   private  Integer result;
+    private Integer result;
 
-   private Resultbody resultbody;
+    private Integer status;
+
+    private JobDetailedInfo resultbody;
 
     public Integer getResult() {
         return result;
@@ -23,19 +25,19 @@ public class BaseDto implements Serializable{
         this.result = result;
     }
 
-    public Resultbody getResultbody() {
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public JobDetailedInfo getResultbody() {
         return resultbody;
     }
 
-    public void setResultbody(Resultbody resultbody) {
+    public void setResultbody(JobDetailedInfo resultbody) {
         this.resultbody = resultbody;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseDto{" +
-                "result=" + result +
-                ", resultbody=" + resultbody +
-                '}';
     }
 }

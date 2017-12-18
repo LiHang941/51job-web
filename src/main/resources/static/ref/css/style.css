@@ -37,3 +37,7 @@ body{
     margin-left:-400px;
     margin-top:-50px;
 }
+
+#main-5 .layui-row img {
+    width: 100%;
+}

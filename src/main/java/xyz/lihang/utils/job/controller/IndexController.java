@@ -14,10 +14,13 @@ import xyz.lihang.utils.job.dto.JobDetailedInfo;
 import xyz.lihang.utils.job.dto.JobInfo;
 import xyz.lihang.utils.job.service.ApiConverterUtil;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
@@ -100,10 +103,20 @@ public class IndexController {
         return apiConverterUtil.areaJson(code);
     }
 
+    /**
+     * fix bug
+     * 由于在tomcat中post的value过大将不会解析并传递到Parameter中,所以只能通过流方式读取并自己截断字符串
+     * @param httpServletRequest
+     * @param httpServletResponse
+     */
     @RequestMapping(value="/import")
-    public void importData (String data, HttpServletResponse httpServletResponse)  {
+    public void importData (HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)  {
         OutputStream os = null;
         try {
+
+            httpServletRequest.setCharacterEncoding("UTF-8");
+            String data = URLDecoder.decode(IOUtils.toString(httpServletRequest.getInputStream() ,"UTF-8"),"utf-8");
+            data = data.substring(data.indexOf("=")+1,data.length());
             httpServletResponse.setHeader("Content-Disposition", "attachment;filename=" + new String("51job.json".getBytes(), "ISO-8859-1"));
             httpServletResponse.setContentType("application/txt");
             httpServletResponse.setCharacterEncoding("UTF-8");
@@ -114,6 +127,7 @@ public class IndexController {
         }finally {
             if (os != null)
                 try {
+                    os.flush();
                     os.close();
                 } catch (IOException e) {
                     e.printStackTrace();

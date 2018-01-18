@@ -1,18 +1,66 @@
 # 51job数据web端查询工具
 1. 采用SpringBoot+Layer+Echarts+taffy(前端数据库)技术,对数据进行简单的查询并统计,直观的查看各个公司、地区的职位情况,方便找工作的各位能在该工具的帮助的情况
 快速定位日后住房,不必投放的简历
-2. [示例地址](http://51job.lihang.xyz)
+2. [在线使用](http://51job.lihang.xyz)
 3. [51job数据入库自定义查询](https://github.com/wawa2222/51job)
+4. [接口示例](src/main/resources/faq/README.md)
 
 ## 示例图片
-![示例图片2](http://www.lihang.xyz/upload/f838c5d3-0f8e-4b24-9c30-97d8238d251e.png)
-![示例图片3](http://www.lihang.xyz/upload/3d5fab87-73a5-42d7-ac4a-0097425f724d.png)
-![示例图片4](http://www.lihang.xyz/upload/b303d777-a07e-4074-b2f9-15f61afdae90.png)
+![示例图片](src/main/resources/static/images/17-1.png)
+![示例图片](src/main/resources/static/images/17-6.png)
+![示例图片](src/main/resources/static/images/17-7.png)
+![示例图片](src/main/resources/static/images/17-8.png)
+
 ## 有兴趣讨论的同学可以加群[小航博客交流群](https://jq.qq.com/?_wv=1027&k=4EPZ3Xr)
+
+### 运行
+#### 环境搭建
+```
+JDK8 + MAVEN 
+```
+#### git克隆
+``` 
+$ git clone https://github.com/wawa2222/51job-web.git
+```
+#### 使用Maven打包
+```
+$ mvn clean install
+```
+#### 启动
+```
+$ cd target
+$ java -jar 51job-web.jar
+```
+#### 启动成功你会看到如下内容
+``` 
+  _        _   _    _                                    _____   __        _           _     
+ | |      (_) | |  | |                                  | ____| /_ |      | |         | |    
+ | |       _  | |__| |   __ _   _ __     __ _   ______  | |__    | |      | |   ___   | |__  
+ | |      | | |  __  |  / _` | | '_ \   / _` | |______| |___ \   | |  _   | |  / _ \  | '_ \ 
+ | |____  | | | |  | | | (_| | | | | | | (_| |           ___) |  | | | |__| | | (_) | | |_) |
+ |______| |_| |_|  |_|  \__,_| |_| |_|  \__, |          |____/   |_|  \____/   \___/  |_.__/ 
+                                         __/ |                                               
+                                        |___/                                                
+
+-51job数据分析工具  2017-12-13
+-工具仅用于数据分析学习
+-@LiHangBlog  http://www.lihang.xyz
+-@QQ交流群     https://jq.qq.com/?_wv=1027&k=4EPZ3Xr
+-@GitHub      https://github.com/wawa2222/51job-web
+ .
+ .
+ . 省略
+```
+#### 浏览器打开 http://localhost:9099/  就可以看到页面了
 
 ### 更新动态
 
 ```
+2018年1月17日
+-优化数据查看性能。
+-修改说明
+-优化数据导出功能
+
 2017年12月18日
 -修复json数据导出问题
 -新增说明
@@ -32,3 +80,52 @@
 -望各位给点灵感以及建议
 
 ```
+### 其他开源作品
+<table>
+    <tr>
+        <th>名称</th>
+        <th>标签</th>
+        <th>源码</th>
+        <th>预览</th>
+    </tr>
+    <tr>
+        <td>前程无忧数据入库工具</td>
+        <td>JAVA</td>
+        <td><a href="https://github.com/wawa2222/51job" target="_blank">源码</a></td>
+        <td>无</td>
+    </tr>
+    <tr>
+        <td>QQ表情贴贴贴</td>
+        <td>java、android、xposed、weex</td>
+        <td><a href="https://github.com/wawa2222/qqtietie" target="_blank">源码</a></td>
+        <td><a href="https://www.coolapk.com/apk/156242" target="_blank">下载</a></td>
+    </tr>
+    <tr>
+        <td>五子棋实现（包括AI）</td>
+        <td>JavaScript、ab剪枝算法</td>
+        <td><a href="https://github.com/wawa2222/piece" target="_blank">源码</a></td>
+        <td><a href="http://lihang.xyz/wuziqi/index.html" target="_blank">预览</a></td>
+    </tr>
+    <tr>
+        <td>小航博客</td>
+        <td>java、ssm、redis、lucene</td>
+        <td><a href="https://github.com/wawa2222/blog" target="_blank">源码</a></td>
+        <td><a href="http://lihang.xyz/" target="_blank">预览</a></td>
+    </tr>
+    <tr>
+        <td>寝室管理系统</td>
+        <td>java、ssh</td>
+        <td><a href="https://github.com/wawa2222/scms" target="_blank">源码</a></td>
+        <td><a href="http://scms.lihang.xyz/" target="_blank">预览</a></td>
+    </tr>
+    <tr>
+        <td>扫雷游戏</td>
+        <td>java</td>
+        <td><a href="https://github.com/wawa2222/mine" target="_blank">源码</a></td>
+        <td>无</td>
+    </tr>
+</table>
+
+### 捐赠
+![捐赠](src/main/resources/static/images/weixin.png)
+![捐赠](src/main/resources/static/images/zhifubao.jpg)

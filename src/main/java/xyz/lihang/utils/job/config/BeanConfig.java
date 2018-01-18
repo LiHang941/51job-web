@@ -65,12 +65,18 @@ public class BeanConfig {
     }
 
 
+
     //json
-    @Bean(name = "httpMessageConverter")
-    public HttpMessageConverter MappingJackson2HttpMessageConverter() {
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+    @Bean
+    public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        return objectMapper;
+    }
+
+    @Bean(name = "httpMessageConverter")
+    public HttpMessageConverter MappingJackson2HttpMessageConverter(ObjectMapper objectMapper) {
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
         return mappingJackson2HttpMessageConverter;
     }

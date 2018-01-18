@@ -4,6 +4,7 @@ body{
     margin: 0;
     min-width: 1200px;
     height: auto;
+    font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
 }
 .header{
     position: fixed;
@@ -27,6 +28,7 @@ body{
     height: auto;
     margin: 0 auto;
     padding-bottom: 200px;
+    margin-top:60px;
 }
 .progress{
     display: none;
@@ -41,4 +43,30 @@ body{
 #main-5 .layui-row img {
     width: 100%;
     margin-top: 15px;
+}
+
+#main-5 legend{
+    font-weight: 600;
+}
+
+#main-5 legend{
+    font-weight: 600;
+}
+#main-5 a{
+    color: #007DDB;
+}
+
+.tu a {
+    font-weight: bold;
+}
+
+.tu img{
+    max-width: 1000px;
+    padding-top: 10px;
+    padding-bottom: 50px;
+}
+.tu li {
+    font-size: 20px;
+    font-weight: bold;
+    color: #007DDB;
 }

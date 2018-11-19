@@ -11,9 +11,8 @@
 
 -51job数据分析工具  2017-12-13
 -工具仅用于数据分析学习
--@LiHangBlog  http://www.lihang.xyz
 -@QQ交流群     https://jq.qq.com/?_wv=1027&k=4EPZ3Xr
--@GitHub      https://github.com/wawa2222/51job-web
+-@GitHub      https://github.com/lihang941/51job-web
 ----------------------------------------------------------------------------------------------------
 //更新动态
 -2018年1月17日

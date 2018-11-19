@@ -6,10 +6,10 @@
 4. [接口示例](facade/src/main/resources/faq/README.md)
 
 ## 示例图片
-![示例图片](facade/src/main/resources/static/images/17-1.png)
-![示例图片](facade/src/main/resources/static/images/17-6.png)
-![示例图片](facade/src/main/resources/static/images/17-7.png)
-![示例图片](facade/src/main/resources/static/images/17-8.png)
+![示例图片](static/images/17-1.png)
+![示例图片](static/images/17-6.png)
+![示例图片](static/images/17-7.png)
+![示例图片](static/images/17-8.png)
 
 ## 有兴趣讨论的同学可以加群[小航博客交流群](https://jq.qq.com/?_wv=1027&k=4EPZ3Xr)
 

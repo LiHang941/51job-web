@@ -3,13 +3,13 @@
 快速定位日后住房,不必投放的简历
 2. [在线使用](http://51job.lihang.xyz)
 3. [51job数据入库自定义查询](https://github.com/wawa2222/51job)
-4. [接口示例](src/main/resources/faq/README.md)
+4. [接口示例](facade/src/main/resources/faq/README.md)
 
 ## 示例图片
-![示例图片](src/main/resources/static/images/17-1.png)
-![示例图片](src/main/resources/static/images/17-6.png)
-![示例图片](src/main/resources/static/images/17-7.png)
-![示例图片](src/main/resources/static/images/17-8.png)
+![示例图片](facade/src/main/resources/static/images/17-1.png)
+![示例图片](facade/src/main/resources/static/images/17-6.png)
+![示例图片](facade/src/main/resources/static/images/17-7.png)
+![示例图片](facade/src/main/resources/static/images/17-8.png)
 
 ## 有兴趣讨论的同学可以加群[小航博客交流群](https://jq.qq.com/?_wv=1027&k=4EPZ3Xr)
 
@@ -104,19 +104,19 @@ $ java -jar 51job-web.jar
         <td>五子棋实现（包括AI）</td>
         <td>JavaScript、ab剪枝算法</td>
         <td><a href="https://github.com/wawa2222/piece" target="_blank">源码</a></td>
-        <td><a href="http://lihang.xyz/wuziqi/index.html" target="_blank">预览</a></td>
+        <td><a href="https://piece.lihang941.club" target="_blank">预览</a></td>
     </tr>
     <tr>
         <td>小航博客</td>
         <td>java、ssm、redis、lucene</td>
         <td><a href="https://github.com/wawa2222/blog" target="_blank">源码</a></td>
-        <td><a href="http://lihang.xyz/" target="_blank">预览</a></td>
+        <td>无</td>
     </tr>
     <tr>
         <td>寝室管理系统</td>
         <td>java、ssh</td>
         <td><a href="https://github.com/wawa2222/scms" target="_blank">源码</a></td>
-        <td><a href="http://scms.lihang.xyz/" target="_blank">预览</a></td>
+        <td>无</td>
     </tr>
     <tr>
         <td>扫雷游戏</td>
@@ -125,7 +125,3 @@ $ java -jar 51job-web.jar
         <td>无</td>
     </tr>
 </table>
-
-### 捐赠
-![捐赠](src/main/resources/static/images/weixin.png)
-![捐赠](src/main/resources/static/images/zhifubao.jpg)

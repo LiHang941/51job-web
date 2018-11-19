@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>小航博客-51job数据分析</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <link href="ref/layui/css/layui.css" rel="stylesheet"/>
+    <link href="ref/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link href="ref/css/style.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="layui-layout layui-layout-admin" >
+        <div class="layui-header header">
+            <div class="layui-logo ">
+                <h2 class="layui-anim layui-anim-rotate">51job数据分析</h2>
+            </div>
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item layui-this" id="nav_main-1"><a href="javascript:change_main('main-1');">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe631;</i>
+                    数据抓取</a></li>
+                <li class="layui-nav-item" id="nav_main-2"><a href="javascript:create_chart();">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe629;</i>
+                    数据分析</a></li>
+                <li class="layui-nav-item" id="nav_main-3"><a href="javascript:create_table();">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe62d;</i>
+                    数据表格</a></li>
+                <li class="layui-nav-item" id="nav_main-4"><a href="javascript:create_code();">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe635;</i>
+                    原始数据</a></li>
+                <li class="layui-nav-item" id="nav_main-5"><a href="javascript:change_main('main-5');">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe60b;</i>
+                    帮助/说明</a></li>
+                <li class="layui-nav-item" id="nav_main-6"><a href="javascript:change_main('main-6');">
+                    <i class="layui-icon" style="font-size: 20px; ">&#xe60e;</i>
+                    更新动态</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <i class="layui-icon" style="font-size: 20px; ">&#xe64c;</i>
+                        关于</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="https://jq.qq.com/?_wv=1027&k=4EPZ3Xr" target="_blank">交流群</a></dd>
+                        <dd><a href="https://github.com/lihang941/51job-web" target="_blank">GitHub</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        <div id="from_progress" class="layui-progress progress" lay-showpercent="true" lay-filter="my_progress" style="position: fixed;top: 60px;left: 0px;width: 100%;z-index: 100;margin: 0 0">
+            <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
+        </div>
+        <div class="layui-body body">
+            <div class="content" id="main-1">
+                <fieldset class="layui-elem-field layui-field-title" >
+                    <legend>筛选参数设定</legend>
+                    <div class="layui-field-box">
+                        <form class="layui-form layui-form-pane" action="" id="form_vue">
+                            <div class="layui-form-item" pane>
+                                <label class="layui-form-label">搜索框</label>
+                                <div class="layui-input-block">
+                                    <input type="text" style="border-width: 0px;border-left-width: 1px;" name="keyword" value="" placeholder="请输入关键字"  class="layui-input"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">城市选择</label>
+                                <div class="layui-input-inline">
+                                    <select lay-filter="area">
+                                        <option value="">请选择城市首字母</option>
+                                        <option v-for="idl in areaList" :value="idl.code" v-html="idl.value"></option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-inline">
+                                    <select name="jobarea">
+                                        <option value="">请选择市</option>
+                                        <option v-for="idl in areaByCodeList" :value="idl.code" v-html="idl.value"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--工作范围-->
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">发布日期</label>
+                                <div class="layui-input-inline">
+                                    <select name="issuedate">
+                                        <option value="">所有</option>
+                                        <option v-for="idl in issuedateList" :value="idl.code" v-html="idl.value"></option>
+                                    </select>
+                                </div>
+                                <label class="layui-form-label">工作类型</label>
+                                <div class="layui-input-inline">
+                                    <select name="jobterm">
+                                        <option value="">所有</option>
+                                        <option v-for="idl in jobtermList" :value="idl.code" v-html="idl.value"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">学历要求</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="degree" lay-skin="primary" v-for="wk in degreeList" :title="wk.value" :value="wk.code"/>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">公司规模</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="cosize" lay-skin="primary" v-for="wk in cosizeList" :title="wk.value" :value="wk.code"/>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">工作年限</label>
+                                <div class="layui-input-block">
+                                    <input type="checkbox" name="workyear" lay-skin="primary" v-for="wk in workyearList" :title="wk.value" :value="wk.code"/>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <fieldset class="layui-elem-field">
+                                    <legend>公司性质</legend>
+                                    <div class="layui-field-box">
+                                        <input type="checkbox" name="cotype" lay-skin="primary" v-for="wk in cotypeList" :title="wk.value" :value="wk.code"/>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="layui-form-item">
+                                <fieldset class="layui-elem-field">
+                                    <legend>薪资范围</legend>
+                                    <div class="layui-field-box">
+                                        <input type="checkbox" name="saltype" lay-skin="primary" v-for="wk in saltypeList" :title="wk.value" :value="wk.code"/>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <a class="layui-btn" href="javascript:;" v-on:click="form_send">开始抓取数据</a>
+                        </form>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="content" id="main-2">
+                <div class="layui-container">
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md6" >
+                            <fieldset class="layui-elem-field">
+                                <legend>薪资情况</legend>
+                                <div class="layui-field-box">
+                                    <div id="chart_sal" style="width: 100%;height: 600px"></div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="layui-col-md6">
+                            <fieldset class="layui-elem-field">
+                                <legend>各个公司-职位情况</legend>
+                                <div class="layui-field-box">
+                                    <div id="chart_company" style="width: 100%;height: 600px"></div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-col-space15">
+                        <div class="layui-col-md6" >
+                            <fieldset class="layui-elem-field">
+                                <legend>用人要求</legend>
+                                <div class="layui-field-box">
+                                    <div id="chart_workyear" style="width: 100%;height: 600px"></div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="layui-col-md6">
+                            <fieldset class="layui-elem-field">
+                                <legend>各地区-职位情况</legend>
+                                <div class="layui-field-box">
+                                    <div id="chart_area" style="width: 100%;height: 600px;"></div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="content" id="main-3">
+                <div class="layui-collapse">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title">数据二次筛选-(此操作会影响所有的数据显示)</h2>
+                        <div class="layui-colla-content">
+                            <form id="job-table-form" class="layui-form layui-form-pane" >
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">职位名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="like_jobname" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <label class="layui-form-label">公司名称</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="like_coname" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <label class="layui-form-label">工作地点</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="like_jobarea" lay-verify="required" placeholder="请输入关键字" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">工资</label>
+                                    <div class="layui-input-inline">
+                                        <select name="is_providesalary">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                    <label class="layui-form-label">工资范围</label>
+                                    <div class="layui-input-inline" style="width: 100px;">
+                                        <input type="text" name="gte_startSalary" placeholder="￥/元" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid">-</div>
+                                    <div class="layui-input-inline" style="width: 100px;">
+                                        <input type="text" name="lte_endSalary" placeholder="￥/元" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">工作经验</label>
+                                    <div class="layui-input-inline">
+                                        <select name="is_workyear">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                    <label class="layui-form-label">学历</label>
+                                    <div class="layui-input-inline">
+                                        <select name="is_degree">
+                                            <option value="">请选择</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-btn-group" style="margin-top: 10px;">
+                    <a class="layui-btn" href="javascript:;" id="main-3-btn-condition">二次筛选</a>
+                    <a class="layui-btn layui-btn-normal" href="javascript:;" id="main-3-btn-condition-clear">清除筛选条件</a>
+                </div>
+                <table class="layui-hide" id="job_data_table" lay-filter="job_data_table"></table>
+                <script type="text/html" id="job_table_bar">
+                    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="col">公司</a>
+                    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="show">查看</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                </script>
+            </div>
+            <div class="content" id="main-4">
+                <div class="layui-btn-group">
+                    <button class="layui-btn" id="main-4-btn-import">导出全部</button>
+                    <button class="layui-btn" onclick="code_clear()">重新生成</button>
+                </div>
+                <p style="text-align: center"><button onclick="code_next_page()" class="layui-btn layui-btn-radius layui-btn-primary" >下一页</button></p>
+            </div>
+            <div class="content" id="main-5">
+                <h1>目录</h1>
+                <hr class="layui-bg-black">
+                <blockquote class="layui-elem-quote">
+                    <ul style="line-height: 30px;">
+                        <li><a href="#zygn">1.主要功能</a></li>
+                        <li><a href="#cjyf">2.常见用法(文字&图)</a></li>
+                        <li><a href="#wtfk">3.问题反馈方式</a></li>
+                        <li><a href="#qtky">4.其他开源作品</a></li>
+                        <li><a href="#jz">5.捐赠</a></li>
+                    </ul>
+                </blockquote>
+                <a name="zygn"></a>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>主要功能</legend>
+                </fieldset>
+                <blockquote class="layui-elem-quote">
+
+                    <ul style="line-height: 30px;">
+                        <li>1.快速抓取出可用数据，可在此数据基础上进行数据挖掘</li>
+                        <li>2.统计功能</li>
+                        <li style="padding-left: 10px">帮助人事快速建立人员需求的薪资规范</li>
+                        <li style="padding-left: 10px">一览职位的发布情况，薪资情况，地区分布,用人要求，详细信息等</li>
+                        <li>3.二次筛选</li>
+                        <li style="padding-left: 10px">在当前数据的基础上进行数据的删除，筛选</li>
+                        <li>4.原始数据</li>
+                        <li style="padding-left: 10px">可对原始数据进行导出，方便开发人员使用</li>
+                    </ul>
+                </blockquote>
+
+                <a name="cjyf"></a>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>常见用法(文字&图)</legend>
+                </fieldset>
+                <blockquote class="layui-elem-quote">
+
+                    <ul style="line-height: 30px;" class="tu">
+                        <li>数据查询</li>
+                        <li><img src="images/17-1.png"/></li>
+                        <li>薪资情况</li>
+                        <li><img src="images/17-2.png"/></li>
+                        <li>可以通过单击薪资情况的条目显示详细内容</li>
+                        <li><img src="images/17-3.png"/></li>
+                        <li>职位情况，同样可以通过单击条目查看职位内容</li>
+                        <li><img src="images/17-4.png"/></li>
+                        <li>用人要求,对于新手可能有用</li>
+                        <li><img src="images/17-5.png"/></li>
+                        <li>地区分布,可以快速定位城市的IT发展区域，便于日后买房租房</li>
+                        <li><img src="images/17-6.png"/></li>
+                        <li>数据表格，对数据二次筛选，又可对数据进行删除</li>
+                        <li><img src="images/17-7.png"/></li>
+                        <li>原始数据导出查看</li>
+                        <li><img src="images/17-8.png"/></li>
+                        <li>联系方式</li>
+                        <li><img src="images/17-9.png"/></li>
+                    </ul>
+                </blockquote>
+                <a name="wtfk"></a>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>问题反馈方式</legend>
+                </fieldset>
+
+                <blockquote class="layui-elem-quote">
+
+                    <ul style="line-height: 30px;" >
+                        <li>1.通过我的博客留言方式，本人几乎每早就会查看留言 <a href="https://github.com/LiHang941/51job-web/issues">留言地址</a></li>
+                        <li>2.加群联系群主 <a href="https://jq.qq.com/?_wv=1027&k=4EPZ3Xr">加群链接</a></li>
+                        <li>3.通过github <a href="https://github.com/lihang941/">github</a></li>
+                    </ul>
+                </blockquote>
+                <a name="qtky"></a>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>其他开源作品</legend>
+                </fieldset>
+                <blockquote class="layui-elem-quote">
+
+                    <table class="layui-table">
+                        <tr>
+                            <th>名称</th>
+                            <th>标签</th>
+                            <th>源码</th>
+                            <th>预览</th>
+                        </tr>
+                        <tr>
+                            <td>前程无忧数据入库工具</td>
+                            <td>JAVA</td>
+                            <td><a href="https://github.com/wawa2222/51job" target="_blank">源码</a></td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>QQ表情贴贴贴</td>
+                            <td>java、android、xposed、weex</td>
+                            <td><a href="https://github.com/wawa2222/qqtietie" target="_blank">源码</a></td>
+                            <td><a href="https://www.coolapk.com/apk/156242" target="_blank">下载</a></td>
+                        </tr>
+                        <tr>
+                            <td>五子棋实现（包括AI）</td>
+                            <td>JavaScript、ab剪枝算法</td>
+                            <td><a href="https://github.com/wawa2222/piece" target="_blank">源码</a></td>
+                            <td><a href="https://piece.lihang941.club" target="_blank">预览</a></td>
+                        </tr>
+                        <tr>
+                            <td>小航博客</td>
+                            <td>java、ssm、redis、lucene</td>
+                            <td><a href="https://github.com/wawa2222/blog" target="_blank">源码</a></td>
+                            <td><a href="https://www.lihang941.club/" target="_blank">预览</a></td>
+                        </tr>
+                        <tr>
+                            <td>寝室管理系统</td>
+                            <td>java、ssh</td>
+                            <td><a href="https://github.com/wawa2222/scms" target="_blank">源码</a></td>
+                            <td>无</td>
+                        </tr>
+                        <tr>
+                            <td>扫雷游戏</td>
+                            <td>java</td>
+                            <td><a href="https://github.com/wawa2222/mine" target="_blank">源码</a></td>
+                            <td>无</td>
+                        </tr>
+                    </table>
+
+                </blockquote>
+
+                <a name="jz"></a>
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>捐赠</legend>
+                </fieldset>
+
+                <blockquote class="layui-elem-quote">
+
+                    <ul style="line-height: 30px;"  class="tu">
+                        <li>如果你觉得有用，请我喝杯咖啡</li>
+                        <li style="width: 820px;margin: 0 auto;">
+                            <img style="width: 400px" src="images/weixin.png"/>
+                            <img style="width: 400px" src="images/zhifubao.jpg"/>
+                        </li>
+                    </ul>
+                </blockquote>
+
+                <fieldset class="layui-elem-field layui-field-title">
+                    <legend>END</legend>
+                </fieldset>
+            </div>
+            <div class="content" id="main-6">
+                <ul class="layui-timeline">
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">2018年11月18日</h3>
+                            <p><h5>本次更新内容为</h5></p>
+                            <ul>
+                                <li>修改项目为gradle</li>
+                                <li>修复部分bug</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">2017年12月18日</h3>
+                            <p><h5>本次更新内容为</h5></p>
+                            <ul>
+                                <li>修复json数据导出问题</li>
+                                <li>新增说明</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">2017年12月11日</h3>
+                            <p><h5>本次更新内容为</h5></p>
+                            <ul>
+                                <li>数据二次筛选,即抓取数据后的二次筛选</li>
+                                <li>新增两个统计方式</li>
+                                <li>新增导出数据</li>
+                                <li>新增统计的交互功能</li>
+                                <li>优化界面显示,防止卡死</li>
+                                <li>优化代码细节</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <h3 class="layui-timeline-title">2017年11月30日</h3>
+                                <p><h5>51job简单的数据分析悄然上线</h5></p>
+                                <ul>
+                                    <li>数据分析能力孱弱</li>
+                                    <li>望各位给点灵感以及建议<i class="layui-icon"></i></li>
+                                    <li><a href="http://www.lihang.xyz/message" target="_blank">到此处留言</a></li>
+                                </ul>
+                        </div>
+                    </li>
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                        <div class="layui-timeline-content layui-text">
+                            <div class="layui-timeline-title">过去</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--<div class="layui-footer layui-bg-black" style="z-index:100;left: 0px;text-align: center;">-->
+            <!--<a style="color:white" href="http://www.lihang.xyz" target="_blank">© 2017小航博客-51job职位数据分析</a>-->
+        <!--</div>-->
+    </div>
+</body>
+<script src="ref/jquery/jquery-3.2.1.min.js"></script>
+<script src="ref/layui/layui.all.js"></script>
+<script src="ref/vue/vue.min.js"></script>
+<script src="ref/taffydb/taffy.js"></script>
+<script src="ref/echarts/echarts.min.js"></script>
+<script src="ref/js/core.js"></script>
+<script src="ref/js/ispc.js"></script>
+<script src="ref/js/constant.js"></script>
+
+<script>
+    var JOB_DATA = TAFFY();
+</script>
+<!-- test-->
+<!--<script src="ref/js/test.js"></script>-->
+<!--<script>-->
+    <!--job_insert(testData,JOB_DATA);-->
+    <!--create_condition(JOB_DATA);-->
+<!--</script>-->
+
+<script>
+    layui.use('util', function(){
+        var util = layui.util;
+        //执行
+        util.fixbar({
+            bar1: false,
+            bar2:"&#xe604;",
+            css:{right: 40, bottom: 50}
+            ,click: function(type){
+                if(type === 'bar2'){
+                    $(".body")[0].scrollTop = 0;
+                    document.body.scrollTop  = 0;
+                }
+            }
+        });
+    });
+    $(function () {
+        log_banner();
+        layui.element.render();
+        const form_vue = new Vue({
+            el: '#form_vue',
+            data:{
+                degreeList:JOB_CONSTANT.degree,
+                cosizeList:JOB_CONSTANT.cosize,
+                issuedateList:JOB_CONSTANT.issuedate,
+                saltypeList:JOB_CONSTANT.saltype,
+                workyearList:JOB_CONSTANT.workyear,
+                areaList:JOB_CONSTANT.area,
+                jobtermList:JOB_CONSTANT.jobterm,
+                cotypeList:JOB_CONSTANT.cotype,
+                areaByCodeList:[],
+            },
+            methods:{
+                form_send:function () {
+                    var $data = {};
+                    $data.keyword = "";$data.jobarea = "";$data.issuedate = "";
+                    $data.degree = "";$data.saltype = "";$data.cosize = "";$data.workyear = "";
+                    $data.cosize = "";$data.jobterm = "";
+                    var jsonList = $("#form_vue").serializeArray();
+                    var sendFromFlag = false ;
+                    $.each(jsonList,function (i,obj) {
+                        if(obj.value != ""){
+                            sendFromFlag = true;
+                        }
+                        if( $data[obj.name]  == "" ){
+                            $data[obj.name] = obj.value;
+                        }else{
+                            $data[obj.name]  = $data[obj.name] + ","+obj.value;
+                        }
+                    });
+                    if(sendFromFlag == false){
+                        layer.msg('请输入筛选参数', {icon: 2});
+                        return;
+                    }
+                    console.log("请求数据:" + JSON.stringify($data));
+                    $.job_bast_post("totalcount",$data,function (reslut) {
+                        var msg = "总记录数:" + reslut.totalcount;
+                         msg =  msg + "<br/>总页数:" + reslut.pageSize;
+                         msg =  msg + "<br/>获取时间比较长,请等待...";
+                         msg =  msg + "<br/>点击确定继续";
+                        layer.confirm(msg, {icon: 3, title:'提示'}, function(index){
+                            layer.close(index);
+                            var _index = layer.load(1);
+                            var pageno = 1;
+                            var pageSize = reslut.pageSize;
+                            JOB_DATA().remove();
+                            var job_post = function () {
+                                $data.pageno = pageno;
+                                if(pageno > pageSize){
+                                    console.log("数据库:" + JOB_DATA().count());
+                                    layer.msg("抓取完毕,马上进入统计页面", {icon: 1,time: 1500},
+                                        function(){
+                                            data_change();
+                                            create_condition(JOB_DATA);
+                                            create_table();
+                                            layer.close(_index);
+                                        }
+                                    );
+                                    return;
+                                }
+                                $.job_bast_post("list",$data,function (listReslut) {
+                                    job_insert(listReslut,JOB_DATA);
+                                    console.log("SUCCESS::::第" + pageno +"页获取完毕,共插入:" + listReslut.length + "条" );
+                                    change_progress(pageno,pageSize);
+                                    ++pageno;
+                                    job_post();
+                                },function () {
+                                    console.log("ERROR::::第" + pageno +"页获取失败,共插入:" + 0 + "条" );
+                                    change_progress(pageno,pageSize);
+                                    ++pageno;
+                                    job_post();
+                                });
+                            };
+                            job_post();
+                        });
+                    })
+                },
+                areaByCodeListPush:function (list) {
+                    this.areaByCodeList = list;
+                    this.$nextTick(function(){
+                        layui.form.render();
+                    });
+                }
+            },
+            mounted: function () {
+                layui.form.render();
+            }
+        });
+        layui.form.on('select(area)', function(data){
+            if(data.value == ""){
+                form_vue.areaByCodeList = [];
+                return;
+            }
+            var url = "areaJson?code=" + data.value;
+            $.getJSON(url,function (result) {
+                form_vue.areaByCodeListPush(result.data.items) ;
+            });
+        });
+        layui.table.on('tool(job_data_table)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'show'){
+               var url = "http://jobs.51job.com/overseas/"+data.jobid+".html";
+               window.open(url);
+            }else if(obj.event === 'del'){
+                layer.confirm('真的删除行么', function(index){
+                    obj.del();
+                    JOB_DATA({"jobid":{"is":data.jobid}}).remove();
+                    data_change();
+                    layer.close(index);
+                });
+            }else if(obj.event === 'col'){
+                var url = "http://jobs.51job.com/all/co"+data.coid+".html";
+                window.open(url);
+            }
+        });
+        $("#main-3-btn-condition").click(function () {
+            var _index =  layer.load(2);
+            setTimeout(function () {
+                get_Condition();
+                create_table_data();
+                layer.close(_index);
+            },10);
+
+        });
+        $("#main-3-btn-condition-clear").click(function () {
+            var _index =  layer.load(2);
+            setTimeout(function () {
+                clear_Condition();
+                create_table_data();
+                layer.close(_index);
+            },10);
+        });
+        $("#main-4-btn-import").click(function () {
+            importJson(FIlTER_JOB_DATA().order("lastupdate desc,coname desc"));
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,6 @@
+server:
+  port: 9099
+resources:
+  static-locations:
+    - classpath:/static
+    - file:static

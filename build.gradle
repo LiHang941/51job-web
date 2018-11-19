@@ -1,0 +1,64 @@
+buildscript {
+    ext {
+        springBootVersion = '2.1.0.RELEASE'
+    }
+
+    repositories {
+        maven { url "http://repo1.maven.org/maven2/" }
+        maven { url 'http://repo.spring.io/snapshot' }
+        maven { url 'http://repo.spring.io/milestone' }
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+    }
+
+}
+
+
+
+subprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'application'
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    compileJava.dependsOn(processResources)
+
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+
+    repositories {
+        maven { url "http://maven.aliyun.com/nexus/content/groups/public"}
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        implementation "org.springframework.boot:spring-boot-starter"
+        implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+    }
+
+    jar {
+        enabled = true
+    }
+
+    bootJar {
+        classifier = 'app'
+    }
+
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10'
+}
+

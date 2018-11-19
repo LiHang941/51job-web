@@ -1,8 +1,8 @@
 # 51job数据web端查询工具
 1. 采用SpringBoot+Layer+Echarts+taffy(前端数据库)技术,对数据进行简单的查询并统计,直观的查看各个公司、地区的职位情况,方便找工作的各位能在该工具的帮助的情况
 快速定位日后住房,不必投放的简历
-2. [在线使用](http://51job.lihang.xyz)
-3. [51job数据入库自定义查询](https://github.com/wawa2222/51job)
+2. [在线使用](https://51job.lihang941.club)
+3. [51job数据入库自定义查询](https://github.com/lihang941/51job)
 4. [接口示例](facade/src/main/resources/faq/README.md)
 
 ## 示例图片
@@ -14,9 +14,9 @@
 ## 有兴趣讨论的同学可以加群[小航博客交流群](https://jq.qq.com/?_wv=1027&k=4EPZ3Xr)
 
 ### 运行
-#### 环境搭建
+
 ```
-JDK8 + MAVEN 
+依赖 JDK8 
 ```
 #### git克隆
 ``` 
@@ -24,12 +24,12 @@ $ git clone https://github.com/wawa2222/51job-web.git
 ```
 #### 使用Maven打包
 ```
-$ mvn clean install
+$ gradlew[.bat] :facade:bootJar   
 ```
 #### 启动
 ```
-$ cd target
-$ java -jar 51job-web.jar
+$ cd facade/build/facade-app.jar
+$ java -jar facade-app.jar
 ```
 #### 启动成功你会看到如下内容
 ``` 
@@ -56,6 +56,7 @@ $ java -jar 51job-web.jar
 ### 更新动态
 
 ```
+
 2018年1月17日
 -优化数据查看性能。
 -修改说明

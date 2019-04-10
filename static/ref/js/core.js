@@ -317,7 +317,7 @@
                                 var job = jobinfo_Parse(result.key);
                                 var str = "";
                                 for (var key in JOB_CONSTANT.convert) {
-                                    if (job[key] !== undefined) {
+                                    if (typeof(job[key]) === 'string') {
                                         str = str + "<span style='color: #01AAED;font-weight:bold;'>"
                                             + JOB_CONSTANT.convert[key] + ":</span>"
                                             + "&nbsp;&nbsp;&nbsp;" + job[key].replace(/\n/g, "<br/>");

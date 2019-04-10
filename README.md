@@ -28,7 +28,7 @@ $ gradlew[.bat] :facade:bootJar
 ```
 #### 启动
 ```
-$ cd facade/build/facade-app.jar
+$ cd facade/build/
 $ java -jar facade-app.jar
 ```
 #### 启动成功你会看到如下内容
@@ -105,7 +105,7 @@ $ java -jar facade-app.jar
         <td>五子棋实现（包括AI）</td>
         <td>JavaScript、ab剪枝算法</td>
         <td><a href="https://github.com/wawa2222/piece" target="_blank">源码</a></td>
-        <td><a href="https://piece.lihang941.club" target="_blank">预览</a></td>
+        <td><a href="https://m.lihang941.club" target="_blank">预览</a></td>
     </tr>
     <tr>
         <td>小航博客</td>

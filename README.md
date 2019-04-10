@@ -28,7 +28,7 @@ $ gradlew[.bat] :facade:bootJar
 ```
 #### 启动
 ```
-$ cd facade/build/
+$ cd facade/build/libs/
 $ java -jar facade-app.jar
 ```
 #### 启动成功你会看到如下内容
